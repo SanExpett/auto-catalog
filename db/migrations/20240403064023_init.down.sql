@@ -1,0 +1,5 @@
+DROP TABLE IF EXISTS public."people" CASCADE;
+DROP TABLE IF EXISTS public."car" CASCADE;
+
+DROP SEQUENCE IF EXISTS people_id_seq;
+DROP SEQUENCE IF EXISTS car_id_seq;

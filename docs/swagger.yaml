@@ -1,0 +1,462 @@
+basePath: /api/v1
+definitions:
+  github_com_SanExpett_auto-catalog_internal_server_delivery.ErrorResponse:
+    properties:
+      body:
+        $ref: '#/definitions/github_com_SanExpett_auto-catalog_internal_server_delivery.ResponseBodyError'
+      status:
+        type: integer
+    type: object
+  github_com_SanExpett_auto-catalog_internal_server_delivery.Response:
+    properties:
+      body:
+        $ref: '#/definitions/github_com_SanExpett_auto-catalog_internal_server_delivery.ResponseBody'
+      status:
+        type: integer
+    type: object
+  github_com_SanExpett_auto-catalog_internal_server_delivery.ResponseBody:
+    properties:
+      message:
+        type: string
+    type: object
+  github_com_SanExpett_auto-catalog_internal_server_delivery.ResponseBodyError:
+    properties:
+      error:
+        type: string
+    type: object
+  github_com_SanExpett_auto-catalog_internal_server_delivery.ResponseBodyID:
+    properties:
+      id:
+        type: integer
+    type: object
+  github_com_SanExpett_auto-catalog_internal_server_delivery.ResponseID:
+    properties:
+      body:
+        $ref: '#/definitions/github_com_SanExpett_auto-catalog_internal_server_delivery.ResponseBodyID'
+      status:
+        type: integer
+    type: object
+  github_com_SanExpett_auto-catalog_pkg_models.Car:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      mark:
+        type: string
+      model:
+        type: string
+      owner_id:
+        type: integer
+      reg_num:
+        type: string
+      year:
+        type: integer
+    type: object
+  github_com_SanExpett_auto-catalog_pkg_models.People:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      patronymic:
+        type: string
+      surname:
+        type: string
+    type: object
+  github_com_SanExpett_auto-catalog_pkg_models.PreCar:
+    properties:
+      mark:
+        type: string
+      model:
+        type: string
+      owner_id:
+        type: integer
+      reg_num:
+        type: string
+      year:
+        type: integer
+    type: object
+  github_com_SanExpett_auto-catalog_pkg_models.PrePeople:
+    properties:
+      name:
+        type: string
+      patronymic:
+        type: string
+      surname:
+        type: string
+    type: object
+  internal_car_delivery.CarListResponse:
+    properties:
+      body:
+        items:
+          $ref: '#/definitions/github_com_SanExpett_auto-catalog_pkg_models.Car'
+        type: array
+      status:
+        type: integer
+    type: object
+  internal_car_delivery.CarResponse:
+    properties:
+      body:
+        $ref: '#/definitions/github_com_SanExpett_auto-catalog_pkg_models.Car'
+      status:
+        type: integer
+    type: object
+  internal_people_delivery.PeopleResponse:
+    properties:
+      body:
+        $ref: '#/definitions/github_com_SanExpett_auto-catalog_pkg_models.People'
+      status:
+        type: integer
+    type: object
+info:
+  contact: {}
+  description: This is a server of AUTO-CATALOG server.
+  title: AUTO-CATALOG project API
+  version: "1.0"
+paths:
+  /car/add:
+    post:
+      consumes:
+      - application/json
+      description: |-
+        add Car by data
+        Error.status can be:
+        StatusErrBadRequest      = 400
+        StatusErrInternalServer  = 500
+      parameters:
+      - description: Car data for adding
+        in: body
+        name: Car
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_SanExpett_auto-catalog_pkg_models.PreCar'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_car_delivery.CarResponse'
+        "222":
+          description: Error
+          schema:
+            $ref: '#/definitions/github_com_SanExpett_auto-catalog_internal_server_delivery.ErrorResponse'
+        "405":
+          description: Method Not Allowed
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: add Car
+      tags:
+      - Car
+  /car/delete:
+    delete:
+      consumes:
+      - application/json
+      description: |-
+        delete Car for author using user id from cookies\jwt.
+        This totally removed Car. Recovery will be impossible
+      parameters:
+      - description: Car id
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_SanExpett_auto-catalog_internal_server_delivery.Response'
+        "222":
+          description: Error
+          schema:
+            $ref: '#/definitions/github_com_SanExpett_auto-catalog_internal_server_delivery.ErrorResponse'
+        "405":
+          description: Method Not Allowed
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: delete Car
+      tags:
+      - Car
+  /car/get:
+    get:
+      consumes:
+      - application/json
+      description: get Car by id
+      parameters:
+      - description: Car id
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_car_delivery.CarResponse'
+        "222":
+          description: Error
+          schema:
+            $ref: '#/definitions/github_com_SanExpett_auto-catalog_internal_server_delivery.ErrorResponse'
+        "405":
+          description: Method Not Allowed
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: get Car
+      tags:
+      - Car
+  /car/get_list:
+    get:
+      consumes:
+      - application/json
+      description: get Cars by count and last_id return old Cars
+      parameters:
+      - description: limit Cars
+        in: query
+        name: limit
+        required: true
+        type: integer
+      - description: offset of Cars
+        in: query
+        name: offset
+        required: true
+        type: integer
+      - description: mark of cars in list
+        in: query
+        name: mark
+        required: true
+        type: string
+      - description: model of cars in list
+        in: query
+        name: model
+        required: true
+        type: string
+      - description: type of sort(0 - by year desc, 1 - by year asc)
+        in: query
+        name: sort_by_year_type
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_car_delivery.CarListResponse'
+        "222":
+          description: Error
+          schema:
+            $ref: '#/definitions/github_com_SanExpett_auto-catalog_internal_server_delivery.ErrorResponse'
+        "405":
+          description: Method Not Allowed
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: get Cars list
+      tags:
+      - Car
+  /car/update:
+    patch:
+      consumes:
+      - application/json
+      description: update Car by id
+      parameters:
+      - description: Car id
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: полностью опционален
+        in: body
+        name: preCar
+        schema:
+          $ref: '#/definitions/github_com_SanExpett_auto-catalog_pkg_models.PreCar'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_SanExpett_auto-catalog_internal_server_delivery.ResponseID'
+        "222":
+          description: Error
+          schema:
+            $ref: '#/definitions/github_com_SanExpett_auto-catalog_internal_server_delivery.ErrorResponse'
+        "405":
+          description: Method Not Allowed
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: update Car
+      tags:
+      - Car
+    put:
+      consumes:
+      - application/json
+      description: update Car by id
+      parameters:
+      - description: Car id
+        in: query
+        name: id
+        required: true
+        type: integer
+      - description: полностью опционален
+        in: body
+        name: preCar
+        schema:
+          $ref: '#/definitions/github_com_SanExpett_auto-catalog_pkg_models.PreCar'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_SanExpett_auto-catalog_internal_server_delivery.ResponseID'
+        "222":
+          description: Error
+          schema:
+            $ref: '#/definitions/github_com_SanExpett_auto-catalog_internal_server_delivery.ErrorResponse'
+        "405":
+          description: Method Not Allowed
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: update Car
+      tags:
+      - Car
+  /people/add:
+    post:
+      consumes:
+      - application/json
+      description: |-
+        add People by data
+        Error.status can be:
+        StatusErrBadRequest      = 400
+        StatusErrInternalServer  = 500
+      parameters:
+      - description: People data for adding
+        in: body
+        name: People
+        required: true
+        schema:
+          $ref: '#/definitions/github_com_SanExpett_auto-catalog_pkg_models.PrePeople'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_people_delivery.PeopleResponse'
+        "222":
+          description: Error
+          schema:
+            $ref: '#/definitions/github_com_SanExpett_auto-catalog_internal_server_delivery.ErrorResponse'
+        "405":
+          description: Method Not Allowed
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: add people
+      tags:
+      - People
+  /people/delete:
+    delete:
+      consumes:
+      - application/json
+      description: |-
+        delete People for author using user id from cookies\jwt.
+        This totally removed People. Recovery will be impossible
+      parameters:
+      - description: People id
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/github_com_SanExpett_auto-catalog_internal_server_delivery.Response'
+        "222":
+          description: Error
+          schema:
+            $ref: '#/definitions/github_com_SanExpett_auto-catalog_internal_server_delivery.ErrorResponse'
+        "405":
+          description: Method Not Allowed
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: delete People
+      tags:
+      - People
+  /people/get:
+    get:
+      consumes:
+      - application/json
+      description: get People by id
+      parameters:
+      - description: People id
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/internal_people_delivery.PeopleResponse'
+        "222":
+          description: Error
+          schema:
+            $ref: '#/definitions/github_com_SanExpett_auto-catalog_internal_server_delivery.ErrorResponse'
+        "405":
+          description: Method Not Allowed
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: get People
+      tags:
+      - People
+schemes:
+- http
+swagger: "2.0"
